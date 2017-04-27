@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kljensen/cpsc113-social-todo-node.git"
+    "url": "https://github.com/yale-cpsc-213/social-todo--sanya301"
   },
   "author": "",
   "license": "Unlicense",
   "bugs": {
-    "url": "https://github.com/kljensen/cpsc113-social-todo-node/issues"
+    "url": "https://github.com/yale-cpsc-213/social-todo--sanya301/issues"
   },
-  "homepage": "https://github.com/kljensen/cpsc113-social-todo-node#readme",
+  "homepage": "https://github.com/yale-cpsc-213/social-todo--sanya301#readme",
   "dependencies": {
     "bcrypt": "^0.8.5",
     "body-parser": "^1.14.2",
@@ -29,6 +29,8 @@
     "express": "^4.13.4",
     "express-handlebars": "^2.0.1",
     "express-session": "^1.13.0",
+    "mongo": "^0.1.0",
+    "mongodb": "^2.2.25",
     "mongoose": "^4.3.7",
     "validator": "^6.2.1"
   },

@@ -1,11 +1,11 @@
-<h1>Social todo app for cpsc113</h1>
+<h1>Social todo app for cpsc213</h1>
 
 {{#if errors}}
 <ul style="color:red" class="errors">
-  {{#each errors}}
-    {{this}}
-  {{/each}}
-</div>
+  <div>
+    {{errors}}
+  </div>
+</ul>
 {{/if}}
 
 {{#if currentUser}}
@@ -16,6 +16,7 @@
         {{#if tasks}}
             <ul class="tasks">
             {{#each tasks}}
+              <li>{{this.name}}</li>
             {{/each}}
             </ul>
         {{else}}
@@ -25,17 +26,47 @@
     <hr>
     <div>
         <h4>Add a new task</h4>
+        <form method = "post" class="tasks" action="/task/create">
+          <div>
+            Task name<input type="text" name="name" id="name" value="" placeholder="" />
+          </div>
+          <div>
+            Task Description<input type="text" name="description" id="description" value="" placeholder="" />
+          </div>
+          <div>
+            Collaborators
+            <input type="email" name="collaborator1" id="collaborator1" value="" placeholder="" />
+            <input type="email" name="collaborator2" id="collaborator2" value="" placeholder="" />
+            <input type="email" name="collaborator3" id="collaborator3" value="" placeholder="" />
+            <input type="submit" value="Submit" />
+          </div>
         </form>
     </div>
 
 {{else}}
 <div>
-  Login
+  <form method="post" class="login-form" action="/user/login">
+    <div>
+			Email <input type="email" name="email" id="email" value="" placeholder="" />
+		</div>
+		<div>
+			Password <input type="password" name="password" id="password" value="" placeholder="" />
+		</div>
+		<div>
+		  <input type="submit" value="Submit" />
+		</div>
+	</form>
 </div>
 
 <div><hr></div>
 
 <div>
-  Register
+  <form method="post" class="signup" action="/user/register">
+			<input type="text" name="name" id="name" value="" placeholder="first & last name" />
+			<input type="email" name="newemail" id="newemail" value="" placeholder="email" />
+			<input type="password" name="newpassword" id="newpassword" value="" placeholder="password" />
+			<input type="password" name="confirmpassword" id="confirmpassword" value="" placeholder="password confirmation" />
+			<input type="submit" value="Submit" />
+	</form>
 </div>
 {{/if}}

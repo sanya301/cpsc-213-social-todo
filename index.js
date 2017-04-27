@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const app = express();
+mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URL);
 
 const Users = require('./models/users.js');
@@ -65,8 +66,18 @@ function isLoggedIn(req, res, next) {
 
 // Middleware that loads a users tasks if they are logged in.
 function loadUserTasks(req, res, next) {
-  // Removed
-  next();
+  if (!res.locals.currentUser) {
+    return next();
+  }
+  Tasks.find({}).or([
+    {owner:res.locals.currentUser},
+    {collaborator: res.locals.currentUser.email}])
+    .exec (function(err, tasks) {
+    if (!err) {
+      res.locals.tasks = tasks;
+    }
+    next();
+  });
 }
 
 // Return the home page after loading tasks for users, or not.
@@ -76,16 +87,50 @@ app.get('/', loadUserTasks, (req, res) => {
 
 // Handle submitted form for new users
 app.post('/user/register', (req, res) => {
-  res.send('woot');
+  if (req.body.newpassword!== req.body.confirmpassword) {
+    return res.render('index', {errors: "Passwords do not match"});
+  }
+  var newUser = new Users();
+  newUser.hashed_password = req.body.newpassword;
+  newUser.email = req.body.newemail;
+  newUser.name = req.body.name;
+  newUser.save(function(err, user) {
+    if (err) {
+      err = "Error registering";
+      res.render ('index', {errors:err});
+    }
+    else {
+      req.session.userId= user._id;
+      res.redirect('/');
+    }
+  });
+  
 });
 
 app.post('/user/login', (req, res) => {
-  res.send('woot');
+  var user = Users.findOne ({email:req.body.email}, function (err,user) {
+    if (err|| !user) {
+      err = "Error Logging in";
+      res.render ('index', {errors:err});
+      return;
+    }
+    user.comparePassword (req.body.password, function(err, isMatch) {
+      if (err||!isMatch) {
+        err = "Error Logging in";
+        res.render ('index', {errors:err});
+      }
+      else {
+        req.session.userId = user._id;
+        res.redirect('/');
+      }
+    });
+  });
 });
 
 // Log a user out
 app.get('/user/logout', (req, res) => {
-  res.send('woot');
+  req.session.destroy();
+  res.redirect('/');
 });
 
 //  All the controllers and routes below this require
@@ -103,10 +148,26 @@ app.post('/tasks/:id/delete', (req, res) => {
 
 // Handle submission of new task form
 app.post('/task/create', (req, res) => {
-  res.send('woot');
+
+  var newTask = new Tasks();
+  newTask.owner = res.locals.currentUser._id;
+  newTask.name = req.body.name;
+  newTask.description = req.body.description;
+  newTask.collaborator1 = req.body.collaborator1;
+  newTask.collaborator2 = req.body.collaborator2;
+  newTask.collaborator3 = req.body.collaborator3;
+  newTask.save(function(err, savedTask) {
+    if (err || !savedTask) {
+      err = "Error saving task";
+      res.render ('index', {errors:err});
+    }
+    else {
+      res.redirect('/');
+    }
+  });
 });
 
 // Start the server
 app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`);
+  console.log(`Example app listening on port http://localhost:${process.env.PORT}`);
 });

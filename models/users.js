@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 
 const SALT_WORK_FACTOR = 10;
 

@@ -16,7 +16,28 @@
         {{#if tasks}}
             <ul class="tasks">
             {{#each tasks}}
-              <li>{{this.name}}</li>
+              <li>{{this.name}} <br\>
+                <form method ="post" action="/tasks/{{this._id}}/delete">
+                  <input type="submit" value="delete" />
+                </form>
+                <form method ="post" action="/tasks/{{this._id}}/{{#if this.isComplete}}complete{{else}}incomplete{{/if}}">
+                  {{#if this.isComplete}}
+                    <div>
+                      <input type="submit" value="Mark incomplete" />
+                    </div>
+                    <div>
+                      Completed!
+                    </div>
+                  {{else}}
+                    <div>
+                      <input type="submit" id="incomplete" value="Mark complete" />
+                    </div>
+                    <div>
+                      Not complete!
+                    </div>
+                  {{/if}} 
+                </form>
+              </li>
             {{/each}}
             </ul>
         {{else}}

@@ -140,13 +140,41 @@ app.get('/user/logout', (req, res) => {
 //  the user to be logged in.
 app.use(isLoggedIn);
 
+
 // Handle submission of new task form
 app.post('/tasks/:id/:action(complete|incomplete)', (req, res) => {
-  res.send('woot');
+  var id = req.params.id;
+  var iscompleted = req.params.action;
+
+	Tasks.findById(id, function(err,savedTask) {
+		if(err|| !savedTask) {
+			console.log('Error finding task on database.');
+			res.redirect('/');
+		}
+		else {
+			savedTask.completeTask();
+			res.redirect('/');
+		}
+	});
+
 });
 
 app.post('/tasks/:id/delete', (req, res) => {
-  res.send('woot');
+  var id = req.params.id;
+  
+  console.log('Removing task. Id: ', id);
+
+	Tasks.findById(id, function(err, taskToRemove) {
+		if(err || !taskToRemove) {
+			console.log('Error finding task on database.');
+			res.redirect('/');
+		}
+		else {
+			taskToRemove.remove();
+			res.redirect('/');
+		}
+	});
+  
 });
 
 // Handle submission of new task form
@@ -156,9 +184,8 @@ app.post('/task/create', (req, res) => {
   newTask.owner = res.locals.currentUser._id;
   newTask.name = req.body.name;
   newTask.description = req.body.description;
-  newTask.collaborator1 = req.body.collaborator1;
-  newTask.collaborator2 = req.body.collaborator2;
-  newTask.collaborator3 = req.body.collaborator3;
+  newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
+  newTask.isComplete = false;
   newTask.save(function(err, savedTask) {
     if (err || !savedTask) {
       err = "Error saving task";

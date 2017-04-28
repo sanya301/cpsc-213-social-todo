@@ -54,6 +54,4 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
   });
 };
 
-UserSchema.statics.count = cb => this.model('Users').find({}, cb);
-
 module.exports = mongoose.model('Users', UserSchema);

@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 
 const SALT_WORK_FACTOR = 10;
 
@@ -25,6 +25,8 @@ const UserSchema = new Schema({
   hashed_password: stringField,
 });
 
+
+
 UserSchema.pre('save', function userPreHook(next) {
   const user = this;
 
@@ -36,7 +38,7 @@ UserSchema.pre('save', function userPreHook(next) {
     if (err) return next(err);
 
     // hash the password using our new salt
-    return bcrypt.hash(user.hashed_password, salt, (err2, hash) => {
+    return bcrypt.hash(user.hashed_password, salt,  (err2, hash) => {
       if (err2) return next(err2);
 
       // override the cleartext password with the hashed one

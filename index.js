@@ -8,6 +8,9 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+var MONGODB_URL = require('./config/database.js');
+
+
 const app = express();
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGO_URL);

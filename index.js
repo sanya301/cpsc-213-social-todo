@@ -85,7 +85,7 @@ app.get('/', loadUserTasks, (req, res) => {
   res.render('index');
 });
 
-/*// Handle submitted form for new users
+// Handle submitted form for new users
 app.post('/user/register', (req, res) => {
   if (req.body.newpassword!== req.body.confirmpassword) {
     return res.render('index', {errors: "Passwords do not match"});
@@ -165,7 +165,7 @@ app.post('/task/create', (req, res) => {
       res.redirect('/');
     }
   });
-}); */
+}); 
 
 // Start the server
 app.listen(process.env.PORT, () => {

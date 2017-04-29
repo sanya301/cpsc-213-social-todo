@@ -161,9 +161,6 @@ app.post('/tasks/:id/:action(complete|incomplete)', (req, res) => {
 
 app.post('/tasks/:id/delete', (req, res) => {
   var id = req.params.id;
-  
-  console.log('Removing task. Id: ', id);
-
 	Tasks.findById(id, function(err, taskToRemove) {
 		if(err || !taskToRemove) {
 			console.log('Error finding task on database.');

@@ -16,11 +16,13 @@
         {{#if tasks}}
             <ul class="tasks">
             {{#each tasks}}
-              <li>{{this.name}} <br\>
-                <form method ="post" action="/tasks/{{this._id}}/delete">
-                  <input type="submit" value="delete" />
-                </form>
-                <form method ="post" action="/tasks/{{this._id}}/{{#if this.isComplete}}complete{{else}}incomplete{{/if}}">
+              <li class = "task">{{this.name}} <br\>
+                {{#if this.owner}}
+                  <form method ="post" class="delete" action="/tasks/{{this._id}}/delete">
+                    <input type="submit" value="delete" />
+                  </form>
+                {{/if}}
+                <form method ="post" class="toggle" action="/tasks/{{this._id}}/{{#if this.isComplete}}complete{{else}}incomplete{{/if}}">
                   {{#if this.isComplete}}
                     <div>
                       <input type="submit" value="Mark incomplete" />
@@ -47,46 +49,34 @@
     <hr>
     <div>
         <h4>Add a new task</h4>
-        <form method = "post" class="tasks" action="/task/create">
-          <div>
-            Task name<input type="text" name="name" id="name" value="" placeholder="" />
-          </div>
-          <div>
-            Task Description<input type="text" name="description" id="description" value="" placeholder="" />
-          </div>
-          <div>
+        <form method = "post" class="createTask" action="/task/create">
+            Task name<input type="text" name="name" id="name" value="" placeholder="" /> <br/>
+            Task Description<input type="text" name="description" id="description" value="" placeholder="" /> <br/>
             Collaborators <br/>
-            <div><input type="email" name="collaborator1" id="collaborator1" value="" placeholder="" /></div>
-            <div><input type="email" name="collaborator2" id="collaborator2" value="" placeholder="" /></div>
-            <div><input type="email" name="collaborator3" id="collaborator3" value="" placeholder="" /></div>
-            <div><input type="submit" value="Submit" /></div>
-          </div>
+            <input type="email" name="collaborator1" id="collaborator1" value="" placeholder="" /><br/>
+            <input type="email" name="collaborator2" id="collaborator2" value="" placeholder="" /><br/>
+            <input type="email" name="collaborator3" id="collaborator3" value="" placeholder="" /><br/>
+            <input type="submit" class="submit" value="Submit" />
         </form>
     </div>
 
 {{else}}
 <div>
-  <form method="post" class="login-form" action="/user/login">
-    <div>
-			Email <input type="email" name="email" id="email" value="" placeholder="" />
-		</div>
-		<div>
-			Password <input type="password" name="password" id="password" value="" placeholder="" />
-		</div>
-		<div>
+  <form method="post" class="login" action="/user/login">
+			Email <input type="email" name="email" id="email" value="" placeholder="" /> <br/>
+			Password <input type="password" name="password" id="password" value="" placeholder="" /> <br/>
 		  <input type="submit" value="Submit" />
-		</div>
 	</form>
 </div>
 
 <div><hr></div>
 
 <div>
-  <form method="post" class="signup" action="/user/register">
+  <form method="post" class="register" action="/user/register">
 			<input type="text" name="name" id="name" value="" placeholder="first & last name" />
-			<input type="email" name="newemail" id="newemail" value="" placeholder="email" />
-			<input type="password" name="newpassword" id="newpassword" value="" placeholder="password" />
-			<input type="password" name="confirmpassword" id="confirmpassword" value="" placeholder="password confirmation" />
+			<input type="email" name="email" id="newemail" value="" placeholder="email" />
+			<input type="password" name="password" id="newpassword" value="" placeholder="password" />
+			<input type="password" name="passwordConfirmation" id="confirmpassword" value="" placeholder="password confirmation" />
 			<input type="submit" value="Submit" />
 	</form>
 </div>

@@ -7,6 +7,8 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
 const validator = require('validator');
+//const Handlebars = require('handlebars');
+
 
 var MONGODB_URL = require('./config/database.js');
 
@@ -23,9 +25,27 @@ const store = new MongoDBStore({
   uri: process.env.MONGO_URL,
   collection: 'sessions',
 });
-app.engine('handlebars', exphbs({
-  defaultLayout: 'main',
-}));
+
+var hbs = exphbs.create({
+    // Specify helpers which are only registered on this instance. 
+    helpers: {
+        isequal: function (lvalue, rvalue, options) {
+          if (arguments.length < 3)
+            console.log("Handlebars Helper equal needs 2 parameters");
+          if( String(lvalue) != String(rvalue) ) {
+            return options.inverse(this);
+          } else {
+            return options.fn(this);
+          }
+        }
+    }
+});
+
+app.engine('handlebars', hbs.engine);
+
+//app.engine('handlebars', exphbs({
+//  defaultLayout: 'main',
+//}));
 app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({
   extended: true,
@@ -74,7 +94,7 @@ function loadUserTasks(req, res, next) {
   }
   Tasks.find({}).or([
     {owner:res.locals.currentUser},
-    {collaborator: res.locals.currentUser.email}])
+    {collaborators: res.locals.currentUser.email}])
     .exec (function(err, tasks) {
     if (!err) {
       res.locals.tasks = tasks;
@@ -183,6 +203,19 @@ app.post('/task/create', (req, res) => {
   newTask.description = req.body.description;
   newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
   newTask.isComplete = false;
+  
+  for (var i = 0; i < 3; i++) {
+    if (newTask.collaborators[i]) {
+      Users.findOne ({email:newTask.collaborators[i]}, function (err,user) {
+        if (err|| !user) {
+          err = "Error saving Task";
+          res.render ('index', {errors:err});
+          return;
+        }
+      });
+    }
+  }
+  
   newTask.save(function(err, savedTask) {
     if (err || !savedTask) {
       err = "Error saving task";

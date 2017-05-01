@@ -25,8 +25,6 @@ const UserSchema = new Schema({
   hashed_password: stringField,
 });
 
-
-
 UserSchema.pre('save', function userPreHook(next) {
   const user = this;
 

@@ -11,6 +11,14 @@ const stringField = {
   maxlength: 500,
 };
 
+/*const collaboratorField = {
+    type: String,
+    minlength: 1,
+    maxlength: 50,
+    lowercase: true,
+    unique: false,
+}; */
+
 const TaskSchema = new Schema({
   owner: ObjectId,
   name: stringField,

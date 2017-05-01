@@ -204,7 +204,7 @@ app.post('/task/create', (req, res) => {
   newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
   newTask.isComplete = false;
   
-  for (var i = 0; i < 3; i++) {
+/*  for (var i = 0; i < 3; i++) {
     if (newTask.collaborators[i]) {
       Users.findOne ({email:newTask.collaborators[i]}, function (err,user) {
         if (err|| !user) {
@@ -214,7 +214,7 @@ app.post('/task/create', (req, res) => {
         }
       });
     }
-  }
+  } */
   
   newTask.save(function(err, savedTask) {
     if (err || !savedTask) {

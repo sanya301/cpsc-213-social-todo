@@ -15,7 +15,7 @@ var MONGODB_URL = require('./config/database.js');
 
 const app = express();
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect('mongodb://sanya:sanya@ds111851.mlab.com:11851/social-todo');
 
 const Users = require('./models/users.js');
 const Tasks = require('./models/tasks.js');

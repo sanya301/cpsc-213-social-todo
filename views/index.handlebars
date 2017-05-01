@@ -17,30 +17,29 @@
 {{/if}}
 
 {{#if currentUser}}
-    <div class="welcome"><h2>Welcome, {{currentUser.name}}</h2></div>
+  <h2 class="welcome">Welcome, {{currentUser.name}}</h2>
     <div>
         <h4>Your Tasks</h4>
-
-        {{#if tasks}}
+          {{#if tasks}}
             <ul class="tasks">
             {{#each tasks}}
               <li class = "task">{{this.name}} <br\>
                 {{#isequal this.owner ../currentUser._id}}
-                  <form method ="post" class="delete" action="/tasks/{{this._id}}/delete">
-                    <input type="submit" value="delete" />
+                  <form method ="post" action="/tasks/{{this._id}}/delete">
+                    <input type="submit" class="delete" value="delete" />
                   </form>
                 {{/isequal}}
-                <form method ="post" class="toggle" action="/tasks/{{this._id}}/{{#if this.isComplete}}complete{{else}}incomplete{{/if}}">
+                <form method ="post" action="/tasks/{{this._id}}/{{#if this.isComplete}}complete{{else}}incomplete{{/if}}">
                   {{#if this.isComplete}}
                     <div>
-                      <input type="submit" value="Mark incomplete" />
+                      <input type="submit" class="toggle" value="Mark incomplete" />
                     </div>
                     <div>
                       Completed!
                     </div>
                   {{else}}
                     <div>
-                      <input type="submit" id="incomplete" value="Mark complete" />
+                      <input type="submit" class="toggle" id="incomplete" value="Mark complete" />
                     </div>
                     <div>
                       Not complete!

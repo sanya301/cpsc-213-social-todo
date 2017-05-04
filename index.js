@@ -8,14 +8,11 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const mongoose = require('mongoose');
 const validator = require('validator');
 //const Handlebars = require('handlebars');
-
-
-var MONGODB_URL = require('./config/database.js');
-
+//var MONGODB_URL = require('./config/database.js');
 
 const app = express();
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://sanya:sanya@ds111851.mlab.com:11851/social-todo');
+mongoose.connect(process.env.MONGO_URL);
 
 const Users = require('./models/users.js');
 const Tasks = require('./models/tasks.js');
@@ -102,6 +99,65 @@ function loadUserTasks(req, res, next) {
     next();
   });
 }
+/*
+function checkCollaborators(req, res) {
+  
+  var collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
+  
+  if (!collaborators[0] && !collaborators[1] && !collaborators[2]) {
+    return true;
+  }
+  
+  else {
+  
+  if (collaborators[0]) {
+    console.log ('in if 1');
+    var user1 = Users.findOne ({email:collaborators[0]}, function (err,user) {
+      if (!user) {
+          err = "Error Logging in";
+          return false;
+        }
+      else if (!collaborators[1] && !collaborators[2]) {
+        console.log ('in else if 1');
+        return true;
+      }
+      else 
+        console.log(user);
+    });
+   }
+   
+  if (collaborators[1]) {
+      console.log ('in if 2');
+      var user2 = Users.findOne ({email:collaborators[1]}, function (err,user) {
+        if (err|| !user) {
+          console.log('in errr');
+          err = "Error Logging in";
+          return false;
+        }
+      else if (!collaborators[2]) {
+        return true;
+      }        
+      else 
+        console.log(user);
+      });
+   }
+   
+  if (collaborators[2]) {
+//      anycollab = true;
+      console.log ('in if 3');
+      var user3 = Users.findOne ({email:collaborators[2]}, function (err,user) {
+        if (err|| !user) {
+          err = "Error Logging in";
+          return false;
+        }
+        else {
+          return true;
+        }
+      });
+   }
+  }
+}
+*/
 
 // Return the home page after loading tasks for users, or not.
 app.get('/', loadUserTasks, (req, res) => {
@@ -137,6 +193,7 @@ app.post('/user/login', (req, res) => {
       res.render ('index', {errors:err});
       return;
     }
+    console.log(user);
     user.comparePassword (req.body.password, function(err, isMatch) {
       if (err||!isMatch) {
         err = "Error Logging in";
@@ -197,25 +254,12 @@ app.post('/tasks/:id/delete', (req, res) => {
 // Handle submission of new task form
 app.post('/task/create', (req, res) => {
 
-  var newTask = new Tasks();
+      var newTask = new Tasks();
   newTask.owner = res.locals.currentUser._id;
   newTask.name = req.body.name;
   newTask.description = req.body.description;
   newTask.collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
   newTask.isComplete = false;
-  
-/*  for (var i = 0; i < 3; i++) {
-    if (newTask.collaborators[i]) {
-      Users.findOne ({email:newTask.collaborators[i]}, function (err,user) {
-        if (err|| !user) {
-          err = "Error saving Task";
-          res.render ('index', {errors:err});
-          return;
-        }
-      });
-    }
-  } */
-  
   newTask.save(function(err, savedTask) {
     if (err || !savedTask) {
       err = "Error saving task";
@@ -225,7 +269,7 @@ app.post('/task/create', (req, res) => {
       res.redirect('/');
     }
   });
-}); 
+});
 
 // Start the server
 app.listen(process.env.PORT, () => {

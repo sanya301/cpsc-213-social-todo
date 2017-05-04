@@ -5,14 +5,11 @@
     <title>CPSC213 Todo</title>
 </head>
 <body>
-  
-<h1>Social todo app for cpsc213</h1>
+  <h1>Social todo app for cpsc213</h1>
 
 {{#if errors}}
 <ul style="color:red" class="errors">
-  <div>
     {{errors}}
-  </div>
 {{/if}}
 
 {{#if currentUser}}
@@ -68,7 +65,7 @@
 
 {{else}}
 <div>
-  <form method="post" class="login" action="/user/login">
+  <form class="login"  action="/user/login" method="post">
 			Email <input type="email" name="email" id="email" value="" placeholder="" /> <br/>
 			Password <input type="password" name="password" id="password" value="" placeholder="" /> <br/>
 		  <input type="submit" value="Submit" />
@@ -78,7 +75,7 @@
 <div><hr></div>
 
 <div>
-  <form method="post" class="register" action="/user/register">
+  <form class="register" action="/user/register" method="post" style="display: block;">
 			<input type="text" name="name" id="name" value="" placeholder="first & last name" />
 			<input type="email" name="email" id="newemail" value="" placeholder="email" />
 			<input type="password" name="password" id="newpassword" value="" placeholder="password" />

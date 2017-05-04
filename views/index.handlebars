@@ -11,9 +11,9 @@
 <ul style="color:red" class="errors">
     {{errors}}
 {{/if}}
-
+<h2 class="welcome">
 {{#if currentUser}}
-  <h2 class="welcome">Welcome, {{currentUser.name}}</h2>
+  Welcome, {{currentUser.name}}</h2>
     <div>
         <h4>Your Tasks</h4>
           {{#if tasks}}

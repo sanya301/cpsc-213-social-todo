@@ -166,12 +166,16 @@ app.get('/', loadUserTasks, (req, res) => {
 
 // Handle submitted form for new users
 app.post('/user/register', (req, res) => {
+  console.log('name', req.body.name);
+  console.log('email', req.body.email);
+  console.log('password', req.body.password);
+  console.log('confirmpassword', req.body.passwordConfirmation);
   if (req.body.newpassword!== req.body.confirmpassword) {
     return res.render('index', {errors: "Passwords do not match"});
   }
   var newUser = new Users();
-  newUser.hashed_password = req.body.newpassword;
-  newUser.email = req.body.newemail;
+  newUser.hashed_password = req.body.password;
+  newUser.email = req.body.email;
   newUser.name = req.body.name;
   newUser.save(function(err, user) {
     if (err) {

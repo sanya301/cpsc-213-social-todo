@@ -99,8 +99,70 @@ function loadUserTasks(req, res, next) {
     next();
   });
 }
-/*
-function checkCollaborators(req, res) {
+	/*
+function checkCollaborators(req, res, next) {
+
+  if (req.body.collaborator1) {
+    console.log('if 1');
+    Users.find({}).or([
+    {email:req.body.collaborator1}])
+    .exec (function(err,collabexist) {
+      console.log('')
+		  if(err|| !collabexist) {
+			  err = 'Error finding collaborator 1';
+			  res.render ('index', {errors:err});
+  //      return next(err);
+		  }
+  });
+  }
+  
+   if (req.body.collaborator2) {
+     console.log('if 2');
+    Users.find({}).or([
+    {email:req.body.collaborator2}])
+    .exec (function(err,collabexist) {
+		  if(err|| !collabexist) {
+			  err = 'Error finding collaborator 2';
+			  res.render ('index', {errors:err});
+		  }
+  });
+  }
+  
+   if (req.body.collaborator3) {
+    Users.find({}).or([
+    {email:req.body.collaborator3}])
+    .exec (function(err,collabexist) {
+		  if(err|| !collabexist) {
+			  err = 'Error finding collaborator 3';
+			  res.render ('index', {errors:err});
+		  }
+  });
+  }
+	
+	return next();
+	
+}
+	
+
+	if (task.collaborators[1]) {
+  task.findById(task.collaborators[1], function(err,collabexist) {
+		if(err|| !collabexist) {
+			err = 'Error finding collaborator 2';
+	return next(err);
+		}
+  });
+	}
+	
+	if (task.collaborators[2]) {
+  task.findById(task.collaborators[2], function(err,collabexist) {
+		if(err|| !collabexist) {
+			err = 'Error finding collaborator 3';
+	return next(err);
+		}
+  });
+	}
+	return next ();
+
   
   var collaborators = [req.body.collaborator1, req.body.collaborator2, req.body.collaborator3];
   
@@ -166,10 +228,7 @@ app.get('/', loadUserTasks, (req, res) => {
 
 // Handle submitted form for new users
 app.post('/user/register', (req, res) => {
-  console.log('name', req.body.name);
-  console.log('email', req.body.email);
-  console.log('password', req.body.password);
-  console.log('confirmpassword', req.body.passwordConfirmation);
+
   if (req.body.newpassword!== req.body.confirmpassword) {
     return res.render('index', {errors: "Passwords do not match"});
   }
@@ -257,7 +316,7 @@ app.post('/tasks/:id/delete', (req, res) => {
 
 // Handle submission of new task form
 app.post('/task/create', (req, res) => {
-
+  
       var newTask = new Tasks();
   newTask.owner = res.locals.currentUser._id;
   newTask.name = req.body.name;
